@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Clocks</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -18,7 +20,7 @@
         .clock-container {
             display: flex;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: transparent;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
@@ -27,9 +29,17 @@
             flex: 1;
             text-align: center;
             padding: 20px;
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .clock-section:not(:last-child) {
             border-right: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .clock-section.highlight {
+            background-color: #fff; /* Solid white background */
+            transform: scale(1.05);
+            color: #000;
+            border-left: 2px solid rgba(255, 255, 255, 0.5); /* Ensure highlight is cleanly between separators */
         }
         .location {
             font-size: 1.5em;
@@ -48,7 +58,7 @@
         }
         .clock {
             font-size: 2.8em;
-            white-space: nowrap;
+            font-family: "Noto Sans Mono", monospace;
         }
     </style>
 </head>
@@ -63,8 +73,8 @@
             <div id="vancouverClock" class="clock"></div>
         </div>
 
-        <!-- Zurich Clock -->
-        <div class="clock-section">
+        <!-- Zurich Clock (Highlighted) -->
+        <div class="clock-section highlight">
             <div class="location">
                 <img src="https://flagcdn.com/w320/ch.png" alt="Switzerland Flag" class="flag">
                 Zurich
@@ -103,10 +113,14 @@
             const now = new Date();
             const utc = now.getTime() + now.getTimezoneOffset() * 60000;
 
-            document.getElementById("zurichClock").textContent = new Date(utc + offsets.zurich * 3600000).toLocaleTimeString();
-            document.getElementById("vancouverClock").textContent = new Date(utc + offsets.vancouver * 3600000).toLocaleTimeString();
-            document.getElementById("istanbulClock").textContent = new Date(utc + offsets.istanbul * 3600000).toLocaleTimeString();
-            document.getElementById("singaporeClock").textContent = new Date(utc + offsets.singapore * 3600000).toLocaleTimeString();
+            document.getElementById("zurichClock").textContent = formatTime(new Date(utc + offsets.zurich * 3600000));
+            document.getElementById("vancouverClock").textContent = formatTime(new Date(utc + offsets.vancouver * 3600000));
+            document.getElementById("istanbulClock").textContent = formatTime(new Date(utc + offsets.istanbul * 3600000));
+            document.getElementById("singaporeClock").textContent = formatTime(new Date(utc + offsets.singapore * 3600000));
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         }
 
         // Update clocks every second
@@ -115,4 +129,3 @@
     </script>
 </body>
 </html>
-
