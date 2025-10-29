@@ -103,24 +103,29 @@
 
     <script>
         function updateClocks() {
-            const offsets = {
-                zurich: 2, // Zurich is UTC+1
-                vancouver: -7, // Vancouver is UTC-8
-                istanbul: 3, // Istanbul is UTC+3
-                singapore: 8 // Singapore is UTC+8
+            const now = new Date();
+            
+            // Use Intl.DateTimeFormat to automatically handle DST
+            const timeZones = {
+                zurich: 'Europe/Zurich',
+                vancouver: 'America/Vancouver',
+                istanbul: 'Europe/Istanbul',
+                singapore: 'Asia/Singapore'
             };
 
-            const now = new Date();
-            const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-
-            document.getElementById("zurichClock").textContent = formatTime(new Date(utc + offsets.zurich * 3600000));
-            document.getElementById("vancouverClock").textContent = formatTime(new Date(utc + offsets.vancouver * 3600000));
-            document.getElementById("istanbulClock").textContent = formatTime(new Date(utc + offsets.istanbul * 3600000));
-            document.getElementById("singaporeClock").textContent = formatTime(new Date(utc + offsets.singapore * 3600000));
+            document.getElementById("zurichClock").textContent = formatTimeInTimezone(now, timeZones.zurich);
+            document.getElementById("vancouverClock").textContent = formatTimeInTimezone(now, timeZones.vancouver);
+            document.getElementById("istanbulClock").textContent = formatTimeInTimezone(now, timeZones.istanbul);
+            document.getElementById("singaporeClock").textContent = formatTimeInTimezone(now, timeZones.singapore);
         }
 
-        function formatTime(date) {
-            return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        function formatTimeInTimezone(date, timeZone) {
+            return date.toLocaleTimeString('en-GB', { 
+                timeZone: timeZone,
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
         }
 
         // Update clocks every second
